@@ -42,16 +42,27 @@ module MinitestToRspec
         @source = args[0]
         @target = infer_target_from @source
       else
-        warn 'Please specify source file'
+        warn 'Please specify source file or directory'
         exit E_USAGE
       end
     end
 
     def run
-      assert_file_exists(source)
-      assert_file_does_not_exist(target)
-      ensure_target_directory(target)
-      write_target(converter.convert(read_source, source))
+      if File.directory?(@source)
+        Dir.glob("#{@source}/**/*_test.rb") do |file|
+          convert_file(file, infer_target_from(file))
+        end
+      else
+        convert_file(@source, @target)
+      end
+    end
+
+    def convert_file(file_source, file_target)
+      puts("Converting #{file_source} to #{file_target}")
+      assert_file_exists(file_source)
+      assert_file_does_not_exist(file_target)
+      ensure_target_directory(file_target)
+      File.write(file_target, converter.convert(File.read(file_source), file_source))
     rescue Error => e
       warn "Failed to convert: #{e}"
       exit E_CONVERT_FAIL
