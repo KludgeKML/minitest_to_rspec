@@ -87,6 +87,10 @@ module MinitestToRspec
           refsert eq(s(:true)), be_truthy
         end
 
+        def method_assert_not
+          refsert eq(s(:true)), be_falsey
+        end
+
         def method_assert_equal
           expected = @exp.arguments[0]
           calculated = @exp.arguments[1]
