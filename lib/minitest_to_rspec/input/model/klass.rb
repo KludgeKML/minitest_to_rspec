@@ -17,8 +17,16 @@ module MinitestToRspec
           lineage?(parent, %i[ActionController TestCase])
         end
 
+        def action_dispatch_integration_test_case?
+          lineage?(parent, %i[ActionDispatch IntegrationTest])
+        end
+
         def action_mailer_test_case?
           lineage?(parent, %i[ActionMailer TestCase])
+        end
+
+        def action_view_test_case?
+          lineage?(parent, %i[ActionView TestCase])
         end
 
         def active_support_test_case?
@@ -81,7 +89,9 @@ module MinitestToRspec
           return false unless sexp_type?(:colon2, parent)
           active_support_test_case? ||
             action_controller_test_case? ||
+            action_dispatch_integration_test_case? ||
             action_mailer_test_case? ||
+            action_view_test_case? ||
             test_unit_test_case? ||
             draper_test_case?
         end

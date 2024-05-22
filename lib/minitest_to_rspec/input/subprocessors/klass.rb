@@ -75,10 +75,14 @@ module MinitestToRspec
         def rdm_type
           if @exp.action_controller_test_case?
             :controller
+          elsif @exp.action_dispatch_integration_test_case?
+            :feature
           elsif @exp.draper_test_case?
             :decorator
           elsif @exp.action_mailer_test_case?
             :mailer
+          elsif @exp.action_view_test_case?
+            :view
           else
             :model
           end
